@@ -19,21 +19,29 @@ import java.util.Set;
 public class JmxLoggerControl {
 
     public static void main(String[] args) throws Exception {
-        JMXServiceURL url = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://:1099/jmxrmi");
-        JMXConnector jmxc = JMXConnectorFactory.connect(url, null);
-        MBeanServerConnection connection = jmxc.getMBeanServerConnection();
-        ObjectName jmxConfiguratorName = new ObjectName("ch.qos.logback.classic:Name=default,Type=ch.qos.logback.classic.jmx.JMXConfigurator");
+        JMXConnector jmxc = null;
+        try {
+            JMXServiceURL url = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://:1099/jmxrmi");
+            jmxc = JMXConnectorFactory.connect(url, null);
+            MBeanServerConnection connection = jmxc.getMBeanServerConnection();
+            ObjectName jmxConfiguratorName = new ObjectName(
+                    "ch.qos.logback.classic:Name=default,Type=ch.qos.logback.classic.jmx.JMXConfigurator");
 
-        Set<ICommand> commands = new HashSet<>();
-        commands.add(new PrintAllLoggerLevels(connection, jmxConfiguratorName));
-        commands.add(new SetAllLoggerLevels(connection, jmxConfiguratorName));
+            Set<ICommand> commands = new HashSet<>();
+            commands.add(new PrintAllLoggerLevels(connection, jmxConfiguratorName));
+            commands.add(new SetAllLoggerLevels(connection, jmxConfiguratorName));
 
-        for (ICommand command : commands) {
-            if (command.isAppropriateParameters(args)) {
-                command.execute(args);
-                return;
+            for (ICommand command : commands) {
+                if (command.isAppropriateParameters(args)) {
+                    command.execute(args);
+                    return;
+                }
+            }
+            throw new InvalidParameterException("Wrong command");
+        } finally {
+            if (jmxc != null) {
+                jmxc.close();
             }
         }
-        throw new InvalidParameterException("Wrong command");
     }
 }
