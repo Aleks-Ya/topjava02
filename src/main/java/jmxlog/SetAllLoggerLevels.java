@@ -8,7 +8,6 @@ import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Команда "Задать уровни для всех логгеров".
@@ -35,8 +34,7 @@ class SetAllLoggerLevels extends AbstractCommand {
 
     @Override
     public void execute(String[] args) throws Exception {
-        List<String> loggerNames = (List<String>) connection.getAttribute(jmxConfiguratorName, "LoggerList");
-        for (String loggerName : loggerNames) {
+        for (String loggerName : takeLoggerList()) {
             setLoggerLevel(loggerName, args[1]);
         }
         System.out.println("New level: " + args[1]);

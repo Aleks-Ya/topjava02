@@ -2,7 +2,6 @@ package jmxlog;
 
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
-import java.util.List;
 
 /**
  * Команда "Вывести на консоль уровни всех логгеров".
@@ -20,9 +19,8 @@ class PrintAllLoggerLevels extends AbstractCommand {
 
     @Override
     public void execute(String[] args) throws Exception {
-        List<String> loggerNames = (List<String>) connection.getAttribute(jmxConfiguratorName, "LoggerList");
         System.out.println("Logger levels:");
-        for (String loggerName : loggerNames) {
+        for (String loggerName : takeLoggerList()) {
             String level = (String) connection.invoke(
                     jmxConfiguratorName,
                     "getLoggerEffectiveLevel",
@@ -32,4 +30,5 @@ class PrintAllLoggerLevels extends AbstractCommand {
             System.out.printf("%s: %s%n", loggerName, level);
         }
     }
+
 }
