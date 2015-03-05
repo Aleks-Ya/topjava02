@@ -7,13 +7,10 @@ import java.util.List;
 /**
  * Команда "Вывести на консоль уровни всех логгеров".
  */
-class PrintAllLoggerLevels implements ICommand {
-    private MBeanServerConnection connection;
-    private ObjectName jmxConfiguratorName;
+class PrintAllLoggerLevels extends AbstractCommand {
 
     public PrintAllLoggerLevels(MBeanServerConnection connection, ObjectName jmxConfiguratorName) {
-        this.connection = connection;
-        this.jmxConfiguratorName = jmxConfiguratorName;
+        super(jmxConfiguratorName, connection);
     }
 
     @Override

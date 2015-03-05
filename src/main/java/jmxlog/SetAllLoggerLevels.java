@@ -13,13 +13,10 @@ import java.util.List;
 /**
  * Команда "Задать уровни для всех логгеров".
  */
-class SetAllLoggerLevels implements ICommand {
-    private MBeanServerConnection connection;
-    private ObjectName jmxConfiguratorName;
+class SetAllLoggerLevels extends AbstractCommand {
 
     public SetAllLoggerLevels(MBeanServerConnection connection, ObjectName jmxConfiguratorName) {
-        this.connection = connection;
-        this.jmxConfiguratorName = jmxConfiguratorName;
+        super(jmxConfiguratorName, connection);
     }
 
     @Override
